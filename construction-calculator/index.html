@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Строительный калькулятор</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ Строительный калькулятор</h1>
+        
+        <!-- Этап 1: Ввод параметров -->
+        <div class="input-section">
+            <h2>1. Параметры объекта</h2>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="object-type" value="foundation" checked> Фундамент
+                </label>
+                <label>
+                    <input type="radio" name="object-type" value="platform"> Площадка
+                </label>
+            </div>
+            <div class="input-group">
+                <label>Длина (м)</label>
+                <input type="number" id="length" value="4">
+            </div>
+            <div class="input-group">
+                <label>Ширина (м)</label>
+                <input type="number" id="width" value="4">
+            </div>
+            <div class="input-group">
+                <label>Высота/Толщина (м)</label>
+                <input type="number" id="height" value="0.3">
+            </div>
+        </div>
+
+        <!-- Этап 2: Расчёт материалов -->
+        <div class="result-section" id="material-result">
+            <h2>2. Материалы</h2>
+            <table>
+                <tr><th>Параметр</th><th>Значение</th></tr>
+                <tr><td>Площадь</td><td><b id="area-result">—</b></td></tr>
+                <tr><td>Объём бетона</td><td><b id="volume-result">—</b></td></tr>
+                <tr><td>Доски (6 м)</td><td><b id="boards-result">—</b></td></tr>
+                <tr><td>Арматура (10 мм)</td><td><b id="armature-result">—</b></td></tr>
+                <tr><td>Песок (подушка 5 см)</td><td><b id="sand-result">—</b></td></tr>
+            </table>
+        </div>
+
+        <!-- Этап 3: Ввод цен -->
+        <div class="input-section">
+            <h2>3. Стоимость</h2>
+            <table class="price-table">
+                <tr><td>Доска (шт.)</td><td><input type="number" id="board-price" value="500"></td></tr>
+                <tr><td>Арматура (кг)</td><td><input type="number" id="armature-price" value="80"></td></tr>
+                <tr><td>Бетон (м³)</td><td><input type="number" id="concrete-price" value="4650"></td></tr>
+                <tr><td>Песок (м³)</td><td><input type="number" id="sand-price" value="1200"></td></tr>
+                <tr><td>Доставка</td><td><input type="number" id="delivery-price" value="0"></td></tr>
+                <tr><td id="work-price-label">Работа (м³)</td><td><input type="number" id="work-price" value="7000"></td></tr>
+            </table>
+        </div>
+
+        <button onclick="calculateAll()">Рассчитать смету</button>
+
+        <!-- Этап 4: Итоговая смета -->
+        <div class="result-section" id="total-result">
+            <h2>4. Итоговая смета</h2>
+            <table class="total-table">
+                <tr><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+                <!-- Сюда подставим данные через JS -->
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
