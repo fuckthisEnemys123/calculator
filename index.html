@@ -2,204 +2,304 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Строительный калькулятор</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Строительный калькулятор | Neumorphism</title>
     <style>
-        /* Основные стили */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
+        :root {
+            --primary: #FF6B35;
+            --bg: #F0F0F3;
+            --shadow-light: #FFFFFF;
+            --shadow-dark: #D1D9E6;
+            --text: #2D2D2D;
+        }
+
+        * {
             margin: 0;
-            padding: 20px 0;
-            color: #333;
-            font-size: 16px;
-            line-height: 1.5;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
             min-height: 100vh;
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            -webkit-overflow-scrolling: touch;
+            align-items: center;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
             max-width: 800px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-            margin: 20px;
+            background: var(--bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 
+                8px 8px 16px var(--shadow-dark),
+                -8px -8px 16px var(--shadow-light);
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 25px;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: var(--text);
         }
 
-        .input-section, .result-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background: #fafafa;
+        .section {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 
+                4px 4px 8px var(--shadow-dark),
+                -4px -4px 8px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--text);
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
+            font-size: 14px;
+            color: var(--text);
+            opacity: 0.8;
         }
 
-        input, select, button {
+        input, select {
             width: 100%;
-            padding: 12px 15px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
             font-size: 16px;
-            box-sizing: border-box;
-            min-height: 48px;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 3px 3px 6px var(--shadow-dark),
+                inset -3px -3px 6px var(--shadow-light);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 
+                inset 1px 1px 3px var(--shadow-dark),
+                inset -1px -1px 3px var(--shadow-light);
+        }
+
+        input::placeholder {
+            color: #A0A0A0;
         }
 
         button {
-            background: #3498db;
-            color: white;
+            width: 100%;
+            padding: 16px;
             border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+            margin-top: 10px;
+            background: var(--primary);
+            color: white;
+            box-shadow: 
+                4px 4px 8px var(--shadow-dark),
+                -4px -4px 8px var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                6px 6px 12px var(--shadow-dark),
+                -6px -6px 12px var(--shadow-light);
         }
 
         button:active {
-            transform: scale(0.98);
-            opacity: 0.9;
+            transform: translateY(0);
+            box-shadow: 
+                2px 2px 4px var(--shadow-dark),
+                -2px -2px 4px var(--shadow-light);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        button:hover::after {
+            opacity: 1;
         }
 
         .radio-group {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            margin: 12px 0;
-            cursor: pointer;
-            padding: 10px 0;
+        .radio-option {
+            flex: 1;
         }
 
-        .radio-group input {
-            width: auto;
-            margin-right: 12px;
-            min-height: auto;
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 14px;
+            background: var(--bg);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                3px 3px 6px var(--shadow-dark),
+                -3px -3px 6px var(--shadow-light);
+        }
+
+        .radio-option input:checked + label {
+            box-shadow: 
+                inset 2px 2px 5px var(--shadow-dark),
+                inset -2px -2px 5px var(--shadow-light);
+            color: var(--primary);
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 15px;
-            font-size: 14px;
         }
 
         th, td {
-            padding: 12px;
+            padding: 14px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         th {
-            background: #f0f0f0;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        td {
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        .total-row td {
             font-weight: 600;
+            color: var(--primary);
+            background: rgba(255,107,53,0.05);
+            border-radius: 0 0 8px 8px;
         }
 
-        .total-row {
-            background: #f8f9fa;
-            font-weight: bold;
-        }
-
-        /* Адаптация для мобильных */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-                align-items: stretch;
+            .container {
+                padding: 20px;
+                border-radius: 20px;
             }
             
-            .container {
-                padding: 15px;
-                margin: 10px;
-                border-radius: 0;
+            .section {
+                padding: 18px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
             }
             
             input, select, button {
-                padding: 14px 12px;
+                padding: 12px 16px;
             }
         }
 
-        /* Плавный скролл для полей ввода */
-        @media (max-width: 480px) {
-            html {
-                scroll-behavior: smooth;
-            }
-            
-            input:focus, select:focus {
-                scroll-margin-top: 100px;
-            }
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏗️ Строительный калькулятор</h1>
+        <h1>🏗 Строительный калькулятор</h1>
         
         <!-- Этап 1: Ввод параметров -->
-        <div class="input-section">
-            <h2>1. Параметры объекта</h2>
+        <div class="section">
+            <h2>Параметры объекта</h2>
             <div class="radio-group">
-                <label>
-                    <input type="radio" name="object-type" value="foundation" checked> Фундамент (считаем работу за м³)
-                </label>
-                <label>
-                    <input type="radio" name="object-type" value="platform"> Площадка (считаем работу за м²)
-                </label>
+                <div class="radio-option">
+                    <input type="radio" id="foundation" name="object-type" value="foundation" checked>
+                    <label for="foundation">Фундамент (м³)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="platform" name="object-type" value="platform">
+                    <label for="platform">Площадка (м²)</label>
+                </div>
             </div>
             <div class="input-group">
-                <label>Длина (м)</label>
+                <label for="length">Длина (м)</label>
                 <input type="number" id="length" value="4" placeholder="Введите длину">
             </div>
             <div class="input-group">
-                <label>Ширина (м)</label>
+                <label for="width">Ширина (м)</label>
                 <input type="number" id="width" value="4" placeholder="Введите ширину">
             </div>
             <div class="input-group">
-                <label>Высота/Толщина (м)</label>
+                <label for="height">Высота/Толщина (м)</label>
                 <input type="number" id="height" value="0.3" placeholder="Введите высоту">
             </div>
         </div>
 
         <!-- Этап 2: Расчёт материалов -->
-        <div class="result-section" id="material-result">
-            <h2>2. Материалы</h2>
+        <div class="section" id="material-result">
+            <h2>Материалы</h2>
             <table>
                 <tr><th>Параметр</th><th>Значение</th></tr>
-                <tr><td>Площадь</td><td><b id="area-result">—</b></td></tr>
-                <tr><td>Объём бетона</td><td><b id="volume-result">—</b></td></tr>
-                <tr><td>Доски (6 м)</td><td><b id="boards-result">—</b></td></tr>
-                <tr><td>Арматура (10 мм)</td><td><b id="armature-result">—</b></td></tr>
-                <tr><td>Песок (подушка 5 см)</td><td><b id="sand-result">—</b></td></tr>
+                <tr><td>Площадь</td><td><span id="area-result">—</span></td></tr>
+                <tr><td>Объём бетона</td><td><span id="volume-result">—</span></td></tr>
+                <tr><td>Доски (6 м)</td><td><span id="boards-result">—</span></td></tr>
+                <tr><td>Арматура (10 мм)</td><td><span id="armature-result">—</span></td></tr>
+                <tr><td>Песок (подушка 5 см)</td><td><span id="sand-result">—</span></td></tr>
             </table>
         </div>
 
         <!-- Этап 3: Ввод цен -->
-        <div class="input-section">
-            <h2>3. Стоимость</h2>
-            <table class="price-table">
+        <div class="section">
+            <h2>Стоимость</h2>
+            <table>
                 <tr><td>Доска (шт.)</td><td><input type="number" id="board-price" value="500"></td></tr>
                 <tr><td>Арматура (кг)</td><td><input type="number" id="armature-price" value="80"></td></tr>
                 <tr><td>Бетон (м³)</td><td><input type="number" id="concrete-price" value="4650"></td></tr>
@@ -212,9 +312,9 @@
         <button onclick="calculateAll()">Рассчитать смету</button>
 
         <!-- Этап 4: Итоговая смета -->
-        <div class="result-section" id="total-result">
-            <h2>4. Итоговая смета</h2>
-            <table class="total-table">
+        <div class="section" id="total-result">
+            <h2>Итоговая смета</h2>
+            <table>
                 <tr><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
                 <!-- Сюда подставим данные через JS -->
             </table>
@@ -222,7 +322,7 @@
     </div>
 
     <script>
-        // Форматирование чисел (без .00 для целых)
+        // Форматирование чисел
         function formatNumber(num) {
             return num % 1 === 0 ? num.toString() : num.toFixed(2);
         }
@@ -242,7 +342,7 @@
             const volume = area * height;
             const boardsCount = Math.ceil(area / 6);
             const armatureWeight = Math.ceil(area * 0.5);
-            const sandVolume = (area * 0.05).toFixed(2); // Подушка 5 см
+            const sandVolume = (area * 0.05).toFixed(2);
 
             // Вывод результатов
             document.getElementById('area-result').textContent = `${formatNumber(area)} м²`;
@@ -293,13 +393,13 @@
             // Формируем таблицу
             document.querySelector('#total-result table').innerHTML = `
                 <tr><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
-                <tr><td>Доски</td><td>${materials.boardsCount} шт.</td><td>${formatNumber(prices.board)} руб</td><td><b>${formatNumber(costs.boards)} руб</b></td></tr>
-                <tr><td>Арматура</td><td>${materials.armatureWeight} кг</td><td>${formatNumber(prices.armature)} руб</td><td><b>${formatNumber(costs.armature)} руб</b></td></tr>
-                <tr><td>Бетон</td><td>${formatNumber(materials.volume)} м³</td><td>${formatNumber(prices.concrete)} руб</td><td><b>${formatNumber(costs.concrete)} руб</b></td></tr>
-                <tr><td>Песок</td><td>${materials.sandVolume} м³</td><td>${formatNumber(prices.sand)} руб</td><td><b>${formatNumber(costs.sand)} руб</b></td></tr>
-                <tr><td>Доставка</td><td>1</td><td>${formatNumber(prices.delivery)} руб</td><td><b>${formatNumber(costs.delivery)} руб</b></td></tr>
-                <tr><td>Работа (${workUnits})</td><td>${isFoundation ? formatNumber(materials.volume) : formatNumber(materials.area)}</td><td>${formatNumber(prices.work)} руб</td><td><b>${formatNumber(workCost)} руб</b></td></tr>
-                <tr class="total-row"><td colspan="3"><b>Итого</b></td><td><b>${formatNumber(total)} руб</b></td></tr>
+                <tr><td>Доски</td><td>${materials.boardsCount} шт.</td><td>${formatNumber(prices.board)} руб</td><td>${formatNumber(costs.boards)} руб</td></tr>
+                <tr><td>Арматура</td><td>${materials.armatureWeight} кг</td><td>${formatNumber(prices.armature)} руб</td><td>${formatNumber(costs.armature)} руб</td></tr>
+                <tr><td>Бетон</td><td>${formatNumber(materials.volume)} м³</td><td>${formatNumber(prices.concrete)} руб</td><td>${formatNumber(costs.concrete)} руб</td></tr>
+                <tr><td>Песок</td><td>${materials.sandVolume} м³</td><td>${formatNumber(prices.sand)} руб</td><td>${formatNumber(costs.sand)} руб</td></tr>
+                <tr><td>Доставка</td><td>1</td><td>${formatNumber(prices.delivery)} руб</td><td>${formatNumber(costs.delivery)} руб</td></tr>
+                <tr><td>Работа (${workUnits})</td><td>${isFoundation ? formatNumber(materials.volume) : formatNumber(materials.area)}</td><td>${formatNumber(prices.work)} руб</td><td>${formatNumber(workCost)} руб</td></tr>
+                <tr class="total-row"><td colspan="3">Итого</td><td>${formatNumber(total)} руб</td></tr>
             `;
         }
 
@@ -309,7 +409,7 @@
             if (materials) calculateBudget(materials);
         }
 
-        // Обновляем подпись при переключении типа объекта
+        // Инициализация
         document.querySelectorAll('input[name="object-type"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const isFoundation = this.value === 'foundation';
@@ -318,24 +418,9 @@
             });
         });
 
-        // Инициализация при загрузке
         window.onload = function() {
             window.materials = calculateMaterials();
             if (window.materials) calculateBudget(window.materials);
-            
-            // Улучшение для мобильных устройств
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('focus', function() {
-                    if (window.innerWidth < 768) {
-                        setTimeout(() => {
-                            this.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'center' 
-                            });
-                        }, 100);
-                    }
-                });
-            });
         };
     </script>
 </body>
