@@ -2,9 +2,169 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Строительный калькулятор</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 10px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #3498db;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .input-section, .result-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            min-height: 44px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .radio-group {
+            margin-bottom: 15px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+
+        .radio-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f0f0f0;
+            font-weight: 600;
+        }
+
+        .total-row {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        b {
+            color: #2c3e50;
+        }
+
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .input-section, .result-section {
+                padding: 10px;
+            }
+            
+            input, select, button {
+                padding: 10px;
+            }
+            
+            table {
+                font-size: 13px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+            }
+        }
+
+        /* Улучшение таблиц для мобильных */
+        @media (max-width: 600px) {
+            .total-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,23 +175,23 @@
             <h2>1. Параметры объекта</h2>
             <div class="radio-group">
                 <label>
-                    <input type="radio" name="object-type" value="foundation" checked> Фундамент
+                    <input type="radio" name="object-type" value="foundation" checked> Фундамент (считаем работу за м³)
                 </label>
                 <label>
-                    <input type="radio" name="object-type" value="platform"> Площадка
+                    <input type="radio" name="object-type" value="platform"> Площадка (считаем работу за м²)
                 </label>
             </div>
             <div class="input-group">
                 <label>Длина (м)</label>
-                <input type="number" id="length" value="4">
+                <input type="number" id="length" value="4" placeholder="Введите длину">
             </div>
             <div class="input-group">
                 <label>Ширина (м)</label>
-                <input type="number" id="width" value="4">
+                <input type="number" id="width" value="4" placeholder="Введите ширину">
             </div>
             <div class="input-group">
                 <label>Высота/Толщина (м)</label>
-                <input type="number" id="height" value="0.3">
+                <input type="number" id="height" value="0.3" placeholder="Введите высоту">
             </div>
         </div>
 
@@ -73,6 +233,115 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Форматирование чисел (без .00 для целых)
+        function formatNumber(num) {
+            return num % 1 === 0 ? num.toString() : num.toFixed(2);
+        }
+
+        // Расчёт материалов
+        function calculateMaterials() {
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (!length || !width || !height) {
+                alert("Заполните длину, ширину и высоту!");
+                return false;
+            }
+
+            const area = length * width;
+            const volume = area * height;
+            const boardsCount = Math.ceil(area / 6);
+            const armatureWeight = Math.ceil(area * 0.5);
+            const sandVolume = (area * 0.05).toFixed(2); // Подушка 5 см
+
+            // Вывод результатов
+            document.getElementById('area-result').textContent = `${formatNumber(area)} м²`;
+            document.getElementById('volume-result').textContent = `${formatNumber(volume)} м³`;
+            document.getElementById('boards-result').textContent = `${boardsCount} шт.`;
+            document.getElementById('armature-result').textContent = `${armatureWeight} кг`;
+            document.getElementById('sand-result').textContent = `${sandVolume} м³`;
+
+            return { area, volume, boardsCount, armatureWeight, sandVolume };
+        }
+
+        // Расчёт стоимости
+        function calculateBudget(materials) {
+            const isFoundation = document.querySelector('input[name="object-type"]:checked').value === 'foundation';
+            const workPrice = parseFloat(document.getElementById('work-price').value);
+            
+            // Обновляем подпись для цены работ
+            const workUnits = isFoundation ? 'м³' : 'м²';
+            document.getElementById('work-price-label').textContent = `Работа (${workUnits})`;
+
+            // Получаем цены материалов
+            const prices = {
+                board: parseFloat(document.getElementById('board-price').value),
+                armature: parseFloat(document.getElementById('armature-price').value),
+                concrete: parseFloat(document.getElementById('concrete-price').value),
+                sand: parseFloat(document.getElementById('sand-price').value),
+                delivery: parseFloat(document.getElementById('delivery-price').value) || 0,
+                work: workPrice
+            };
+
+            // Считаем стоимость работ
+            const workCost = isFoundation 
+                ? materials.volume * prices.work 
+                : materials.area * prices.work;
+
+            // Считаем суммы
+            const costs = {
+                boards: materials.boardsCount * prices.board,
+                armature: materials.armatureWeight * prices.armature,
+                concrete: materials.volume * prices.concrete,
+                sand: materials.sandVolume * prices.sand,
+                delivery: prices.delivery,
+                work: workCost
+            };
+
+            const total = Object.values(costs).reduce((sum, cost) => sum + cost, 0);
+
+            // Формируем таблицу
+            document.querySelector('#total-result table').innerHTML = `
+                <tr><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+                <tr><td>Доски</td><td>${materials.boardsCount} шт.</td><td>${formatNumber(prices.board)} руб</td><td><b>${formatNumber(costs.boards)} руб</b></td></tr>
+                <tr><td>Арматура</td><td>${materials.armatureWeight} кг</td><td>${formatNumber(prices.armature)} руб</td><td><b>${formatNumber(costs.armature)} руб</b></td></tr>
+                <tr><td>Бетон</td><td>${formatNumber(materials.volume)} м³</td><td>${formatNumber(prices.concrete)} руб</td><td><b>${formatNumber(costs.concrete)} руб</b></td></tr>
+                <tr><td>Песок</td><td>${materials.sandVolume} м³</td><td>${formatNumber(prices.sand)} руб</td><td><b>${formatNumber(costs.sand)} руб</b></td></tr>
+                <tr><td>Доставка</td><td>1</td><td>${formatNumber(prices.delivery)} руб</td><td><b>${formatNumber(costs.delivery)} руб</b></td></tr>
+                <tr><td>Работа (${workUnits})</td><td>${isFoundation ? formatNumber(materials.volume) : formatNumber(materials.area)}</td><td>${formatNumber(prices.work)} руб</td><td><b>${formatNumber(workCost)} руб</b></td></tr>
+                <tr class="total-row"><td colspan="3"><b>Итого</b></td><td><b>${formatNumber(total)} руб</b></td></tr>
+            `;
+        }
+
+        // Общая функция расчёта
+        function calculateAll() {
+            const materials = calculateMaterials();
+            if (materials) calculateBudget(materials);
+        }
+
+        // Обновляем подпись при переключении типа объекта
+        document.querySelectorAll('input[name="object-type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const isFoundation = this.value === 'foundation';
+                document.getElementById('work-price').value = isFoundation ? '7000' : '1200';
+                if (window.materials) calculateBudget(window.materials);
+            });
+        });
+
+        // Инициализация при загрузке
+        window.onload = function() {
+            window.materials = calculateMaterials();
+            if (window.materials) calculateBudget(window.materials);
+            
+            // Улучшение для мобильных устройств
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('touchstart', function() {
+                    this.focus();
+                });
+            });
+        };
+    </script>
 </body>
 </html>
