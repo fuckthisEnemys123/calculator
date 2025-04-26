@@ -10,40 +10,38 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f7fa;
             margin: 0;
-            padding: 10px;
+            padding: 20px 0;
             color: #333;
             font-size: 16px;
             line-height: 1.5;
-            -webkit-text-size-adjust: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-overflow-scrolling: touch;
         }
 
         .container {
-            max-width: 100%;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 800px;
             background: white;
-            padding: 15px;
+            padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
+            margin: 20px;
         }
 
         h1 {
             text-align: center;
             color: #2c3e50;
             font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            color: #3498db;
-            font-size: 18px;
-            margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         .input-section, .result-section {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             background: #fafafa;
@@ -55,20 +53,20 @@
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #555;
         }
 
         input, select, button {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             margin: 5px 0;
             border: 1px solid #ddd;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
-            min-height: 44px;
+            min-height: 48px;
         }
 
         button {
@@ -76,8 +74,8 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
             font-weight: bold;
+            transition: all 0.2s;
         }
 
         button:active {
@@ -86,31 +84,32 @@
         }
 
         .radio-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .radio-group label {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin: 12px 0;
             cursor: pointer;
             padding: 10px 0;
         }
 
         .radio-group input {
             width: auto;
-            margin-right: 10px;
+            margin-right: 12px;
+            min-height: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
@@ -125,43 +124,32 @@
             font-weight: bold;
         }
 
-        b {
-            color: #2c3e50;
-        }
-
-        /* Адаптация для маленьких экранов */
-        @media (max-width: 480px) {
+        /* Адаптация для мобильных */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: stretch;
+            }
+            
             .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 20px;
-            }
-            
-            .input-section, .result-section {
-                padding: 10px;
+                padding: 15px;
+                margin: 10px;
+                border-radius: 0;
             }
             
             input, select, button {
-                padding: 10px;
-            }
-            
-            table {
-                font-size: 13px;
-            }
-            
-            th, td {
-                padding: 8px 5px;
+                padding: 14px 12px;
             }
         }
 
-        /* Улучшение таблиц для мобильных */
-        @media (max-width: 600px) {
-            .total-table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
+        /* Плавный скролл для полей ввода */
+        @media (max-width: 480px) {
+            html {
+                scroll-behavior: smooth;
+            }
+            
+            input:focus, select:focus {
+                scroll-margin-top: 100px;
             }
         }
     </style>
@@ -337,8 +325,15 @@
             
             // Улучшение для мобильных устройств
             document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('touchstart', function() {
-                    this.focus();
+                input.addEventListener('focus', function() {
+                    if (window.innerWidth < 768) {
+                        setTimeout(() => {
+                            this.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                        }, 100);
+                    }
                 });
             });
         };
